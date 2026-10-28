@@ -3,7 +3,7 @@
 import React, { useState, useEffect } from 'react';
 import { Stethoscope, Calendar, Users, Clipboard, Bed, Shield, User, LogOut, Plus, CheckCircle, Clock, AlertCircle, HeartPulse, Building2 } from 'lucide-react';
 
-const API_BASE_URL = 'https://nelly-best-collections-4.onrender.com'; // or your local backend url e.g. http://localhost:5000
+const API_BASE_URL = 'https://medcare-hospital-csca.onrender.com'; // or your local backend url e.g. http://localhost:5000
 
 const authHeaders = (token?: string | null): Record<string, string> => {
   const headers: Record<string, string> = { 'Content-Type': 'application/json' };
@@ -14,6 +14,11 @@ const authHeaders = (token?: string | null): Record<string, string> => {
 export default function MedicareHMS() {
   const [user, setUser] = useState<{ name: string; role: string; token: string } | null>(null);
   const [showAuthModal, setShowAuthModal] = useState(false);
+  const [year, setYear] = useState<number | null>(null);
+
+  useEffect(() => {
+    setYear(new Date().getFullYear());
+  }, []);
   const [isSignUp, setIsSignUp] = useState(false);
   
   // Auth Form State
@@ -774,7 +779,7 @@ export default function MedicareHMS() {
           </div>
         </div>
         <div className="text-center text-xs border-t border-slate-800 pt-6">
-          &copy; {new Date().getFullYear()} Medicare Hospital Management System. All rights reserved.
+          &copy; {year ?? ''} Medicare Hospital Management System. All rights reserved.
         </div>
       </footer>
     </div>
