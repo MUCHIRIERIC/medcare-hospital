@@ -5,6 +5,12 @@ import { Stethoscope, Calendar, Users, Clipboard, Bed, Shield, User, LogOut, Plu
 
 const API_BASE_URL = 'https://nelly-best-collections-4.onrender.com'; // or your local backend url e.g. http://localhost:5000
 
+const authHeaders = (token?: string | null): Record<string, string> => {
+  const headers: Record<string, string> = { 'Content-Type': 'application/json' };
+  if (token) headers.Authorization = `Bearer ${token}`;
+  return headers;
+};
+
 export default function MedicareHMS() {
   const [user, setUser] = useState<{ name: string; role: string; token: string } | null>(null);
   const [showAuthModal, setShowAuthModal] = useState(false);
@@ -44,7 +50,7 @@ export default function MedicareHMS() {
   const fetchAllData = async () => {
     try {
       const token = localStorage.getItem('medicare_token');
-      const headers = token ? { Authorization: `Bearer ${token}` } : {};
+      const headers = authHeaders(token);
 
       const schedRes = await fetch(`${API_BASE_URL}/api/schedules`);
       if (schedRes.ok) setSchedules(await schedRes.json());
