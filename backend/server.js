@@ -39,8 +39,8 @@ const DEFAULT_SETTINGS = {
     { title: 'Admin Control Center', text: 'Manage users, wards and beds, doctor schedules, emergency cover, branches and everything on this website.' }
   ],
   categories: ['General Medicine', 'Cardiology', 'Neurology', 'Pediatrics', 'Gynecology & Obstetrics', 'Orthopedics', 'Dentistry', 'Eye Care'],
-  hotline: '+254 700 000000',
-  email: 'info@medicare.example',
+  hotline: '+254 700 234567',
+  email: 'info@medicare.hms',
   address: 'Nairobi Medical Tower, Kenya',
   footerNote: 'Providing exceptional patient care, modern diagnostics and streamlined digital hospital management.'
 };
