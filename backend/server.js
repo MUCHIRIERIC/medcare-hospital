@@ -133,8 +133,9 @@ app.post('/api/register', async (req, res) => {
         const token = jwt.sign({ id: user._id, role: user.role, name: user.name }, process.env.JWT_SECRET, { expiresIn: '30d' });
         res.status(201).json({ token, email: user.email, name: user.name, role: user.role });
     } catch (error) {
-        res.status(500).json({ message: 'Server error during registration' });
-    }
+    console.error('REGISTER ERROR:', error);
+    res.status(500).json({ message: error.message });
+}
 });
 
 // 2. Login User
