@@ -201,7 +201,8 @@ mongoose.connection.once('open', seed);
 /* ------------------------------------------------------------------ */
 /* PUBLIC                                                              */
 /* ------------------------------------------------------------------ */
-app.get('/api/health', (req, res) => res.json({ ok: true }));
+// "version" lets you confirm Render is running THIS file (it must include adminCreateUser: true)
+app.get('/api/health', (req, res) => res.json({ ok: true, version: '2026-10-29', adminCreateUser: true }));
 
 app.get('/api/public', wrap(async (req, res) => {
   const [settings, branches, emergency, schedules] = await Promise.all([
@@ -426,5 +427,8 @@ app.delete('/api/users/:id', protect, roles('admin'), wrap(async (req, res) => {
   await User.findByIdAndDelete(req.params.id);
   res.json({ message: 'User deleted successfully' });
 }));
+
+// Unmatched routes return JSON that names the exact method and path that missed
+app.use((req, res) => res.status(404).json({ message: `Route not found: ${req.method} ${req.originalUrl}` }));
 
 app.listen(PORT, () => console.log(`🏥 Medicare HMS Server running on port ${PORT}`));
