@@ -392,15 +392,24 @@ export default function MedicareHMS() {
         .fld:focus{border-color:var(--accent);box-shadow:0 0 0 3px color-mix(in srgb,var(--accent) 22%,transparent)}
         .pb-safe{padding-bottom:env(safe-area-inset-bottom)}
         html{scroll-behavior:smooth}
+        .hms-grad{
+          background-image:linear-gradient(90deg,#0e7490,#2563eb,#7c3aed,#db2777,#f59e0b,#16a34a,#0e7490);
+          background-size:200% 100%;
+          -webkit-background-clip:text;background-clip:text;
+          color:transparent;-webkit-text-fill-color:transparent;
+          padding-bottom:.08em;
+          animation:hmsGradMove 8s linear infinite;
+        }
+        @keyframes hmsGradMove{0%{background-position:0% 50%}100%{background-position:200% 50%}}
       `}</style>
 
       {/* HEADER */}
       <header className="sticky top-0 z-30 bg-white/95 backdrop-blur border-b border-slate-200">
         <div className="max-w-6xl mx-auto px-4 py-3 flex items-center justify-between gap-3">
           <button className="flex items-center gap-3 min-w-0 text-left" onClick={() => window.scrollTo({ top: 0, behavior: 'smooth' })}>
-            {settings.logoUrl ? <Img src={settings.logoUrl} alt="Logo" className="w-10 h-10 rounded-xl object-contain shrink-0" />
-              : <span className="bg-acc text-white p-2.5 rounded-xl shrink-0"><HeartPulse size={22} /></span>}
-            <span className="font-extrabold text-slate-900 leading-tight text-[15px] sm:text-xl line-clamp-2">{settings.siteName}</span>
+            {settings.logoUrl ? <Img src={settings.logoUrl} alt="Logo" className="w-[100px] h-[100px] rounded-xl object-contain shrink-0" />
+              : <span className="bg-acc text-white w-[100px] h-[100px] rounded-xl shrink-0 flex items-center justify-center"><HeartPulse size={52} /></span>}
+            <span className="font-extrabold text-acc leading-tight text-[2rem] sm:text-5xl tracking-tight">{settings.siteName}</span>
           </button>
           {user ? (
             <div className="flex items-center gap-2 shrink-0">
@@ -420,7 +429,7 @@ export default function MedicareHMS() {
             <section className="grid lg:grid-cols-2 gap-8 lg:gap-12 items-center">
               <div className="space-y-5">
                 <span className="inline-flex items-center gap-2 bg-acc-soft text-acc px-3.5 py-1.5 rounded-full text-sm font-semibold"><Stethoscope size={16} />{settings.badge}</span>
-                <h1 className="text-[2rem] sm:text-5xl font-extrabold text-slate-900 leading-[1.1] tracking-tight">{settings.heroTitle}</h1>
+                <h1 className="hms-grad text-[2rem] sm:text-5xl font-extrabold leading-[1.1] tracking-tight">{settings.heroTitle}</h1>
                 <p className="text-slate-600 text-base sm:text-lg leading-relaxed max-w-xl">{settings.heroText}</p>
                 <div className="flex flex-col sm:flex-row gap-3">
                   <button onClick={() => setAuth('register')} className={`${btnP} sm:px-8`}>Book an appointment</button>
@@ -428,8 +437,8 @@ export default function MedicareHMS() {
                 </div>
               </div>
               <div className="grid grid-cols-2 gap-3">
-                {(settings.heroImages || []).slice(0, 3).map((im: any, i: number) => (
-                  <figure key={i} className={`relative rounded-2xl overflow-hidden shadow-lg bg-slate-200 ${i === 0 ? 'col-span-2 aspect-[16/10]' : 'aspect-square'}`}>
+                {(settings.heroImages || []).map((im: any, i: number, arr: any[]) => (
+                  <figure key={i} className={`relative rounded-2xl overflow-hidden shadow-lg bg-slate-200 ${i === 0 || (i === arr.length - 1 && arr.length % 2 === 0) ? 'col-span-2 aspect-[16/10]' : 'aspect-square'}`}>
                     <Img src={im.url} alt={im.caption || 'Hospital'} className="w-full h-full object-cover" />
                     {im.caption && <figcaption className="absolute inset-x-0 bottom-0 bg-gradient-to-t from-slate-900/80 to-transparent text-white text-xs sm:text-sm font-medium p-3 pt-8">{im.caption}</figcaption>}
                   </figure>
@@ -531,6 +540,11 @@ export default function MedicareHMS() {
                     <Field label="Preferred time"><input className={inp} type="time" value={bk.time} onChange={e => setBk({ ...bk, time: e.target.value })} required /></Field>
                   </div>
                   <Field label="Reason for visit"><textarea className={inp} rows={3} placeholder="Briefly describe your symptoms" value={bk.reason} onChange={e => setBk({ ...bk, reason: e.target.value })} required /></Field>
+                  <div className="rounded-xl border border-slate-200 bg-slate-50 p-4 space-y-1.5">
+                    <p className="text-sm font-semibold text-slate-700">Consultation fee: <span className="font-extrabold text-slate-900">KSh 500</span></p>
+                    <p className="text-sm font-bold text-green-700">Payment method: Pochi la Biashara</p>
+                    <p className="text-base font-extrabold text-slate-900 tracking-wide">0768450250</p>
+                  </div>
                   <button className={`${btnP} w-full`} disabled={busy}>{busy ? 'Booking…' : 'Confirm booking'}</button>
                 </Card>
               </form>
@@ -701,7 +715,7 @@ export default function MedicareHMS() {
                       </div>))}
                   </div>
                   <button className={`${btnS} mt-4`} onClick={() => setS('heroImages', [...(sd.heroImages || []), { url: '', caption: '' }])}><Plus size={18} />Add image</button>
-                  <p className="text-xs text-slate-500 mt-2">The first three images are shown in the hero section. Use direct image links (ending in .jpg, .png or from sites like Unsplash).</p>
+                  <p className="text-xs text-slate-500 mt-2">All images added here are shown in the hero section. Use direct image links (ending in .jpg, .png or from sites like Unsplash).</p>
                 </Card>
                 <Card title="Portal cards" icon={Shield}>
                   <div className="grid md:grid-cols-3 gap-4">{(sd.services || []).map((s: any, i: number) => (
